@@ -4,16 +4,15 @@ const monthsGR = ["Ιανουαρίου", "Φεβρουαρίου", "Μαρτί�
 let notes = []
 let count = 0
 
-window.addEventListener("DOMContentLoaded", function(){
+$(function() {
 
-  
-  this.setInterval(printGRDate, 1000)
+  setInterval(printGRDate, 1000)
 
-  this.document.querySelector("#addNoteBtn").addEventListener("click", function(){
-    onInsertHandler({ key: count + 1, note: document.querySelector("#inputNote").value.trim(), softDeleted: false })
-  })
+  $("#addNoteBtn").on("click", function(){
+    onInsertHandler({ key: count + 1, note: $("#inputNote").val().trim(), softDeleted: false })
+  });
 
-  this.document.querySelector("#inputNote").addEventListener("keyup", function(e) {
+  $("#inputNote").on("keyup", function(e) {
     if (e.key === "Enter") {
       onInsertHandler({ key: count + 1, note: e.target.value.trim(), softDeleted: false })
     }
@@ -31,8 +30,7 @@ function printGRDate() {
 
   const outputDate = `${daysGR[day]} ,  ${today.getDate()} ${monthsGR[month]} ${year}`
   const outputHour = `${(hour < 10) ? '0': ''}${hour}:${(minute < 10) ? '0': ''}${minute}:${(seconds < 10) ? '0': ''}${seconds}`
-  document.getElementById("dateTxt").innerHTML = `${outputDate} <br> ${outputHour}`
-  
+  $("#dateTxt").html(`${outputDate} <br> ${outputHour}`) 
 }
 
 /**
@@ -60,15 +58,15 @@ function insertNote(note) {
 * View rendering
 */
 function renderNotes() {
-  const container = document.getElementById("notesWrapper")
+  const $container = $("#notesWrapper")
 
-  container.innerHTML = notes.map((note) => `<div id="${'noteTemplate' + note.key}" class="flex justify-between items-center px-[10px] py-[2px] border-b border-black">
+  $container.html(notes.map((note) => `<div id="${'noteTemplate' + note.key}" class="flex justify-between items-center px-[10px] py-[2px] border-b border-black">
     <div id="${'noteInfo' + note.key}" class="flex items-center">
       <input type="checkbox" id="${'noteCheck' + note.key}" onclick="strikeThrough(${note.key})" class="w-[25px] h-[25px] mr-[5px]" ${note.softDeleted ? 'checked' : ''}>
       <label id="${'noteTxt' + note.key}" for="${'noteCheck' + note.key}" class="w-[200px] max-h-[150px] leading-[1.2rem] overflow-hidden break-words whitespace-normal text-base ${note.softDeleted ? 'line-through text-gray-500' : ''}">${note.note}</label>
     </div>
     <button type="button" id="${'noteDelBtn' + note.key}" class="w-[35px] h-[35px]" onclick="deleteNote(${note.key})">X</button>
-  </div>`).join("")
+  </div>`).join(""))
 }
 
 /*
@@ -90,5 +88,5 @@ function deleteNote(key) {
  * View function
  */
 function reset() {
-  document.querySelector("#inputNote").value = ""
+  $("#inputNote").val("")
 }
